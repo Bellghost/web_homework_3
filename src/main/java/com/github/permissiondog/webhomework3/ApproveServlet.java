@@ -33,11 +33,11 @@ public class ApproveServlet extends HttpServlet {
         }
 
         var oldCourse = Database.getInstance().getCourse(UUID.fromString(id));
-        if (oldCourse == null || !oldCourse.status().equals(Course.DEFAULT)) {
+        if (oldCourse == null || !oldCourse.status().equals(CourseStatus.DEFAULT)) {
             Util.json(response, "{\"ok\":false}");
             return;
         }
-        Database.getInstance().setCourse(new Course(oldCourse.id(), oldCourse.name(), approve ? Course.APPROVED : Course.REJECTED, comment));
+        Database.getInstance().setCourse(new Course(oldCourse.id(), oldCourse.name(), approve ? CourseStatus.APPROVED : CourseStatus.REJECTED, comment, oldCourse.creationTime()));
         Util.json(response, "{\"ok\":true}");
     }
 

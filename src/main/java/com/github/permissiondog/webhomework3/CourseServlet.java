@@ -4,6 +4,7 @@ import javax.servlet.*;
 import javax.servlet.http.*;
 import javax.servlet.annotation.*;
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -20,7 +21,11 @@ public class CourseServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         // 课程申请
         var name = request.getParameter("name");
-        Database.getInstance().setCourse(new Course(UUID.randomUUID(), name, Course.DEFAULT, ""));
+        if (name == null) {
+            Util.json(response, "{\"ok\":false}");
+            return;
+        }
+        Database.getInstance().setCourse(new Course(UUID.randomUUID(), name, CourseStatus.DEFAULT, "", LocalDateTime.now()));
         Util.json(response, "{\"ok\":true}");
     }
 
@@ -28,13 +33,19 @@ public class CourseServlet extends HttpServlet {
     protected void doPut(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         // 课程修改
         var id = request.getParameter("id");
+        log(id);
         var name = request.getParameter("name");
+        log(name);
+        if (id == null || name == null) {
+            Util.json(response, "{\"ok\":false}");
+            return;
+        }
         var oldCourse = Database.getInstance().getCourse(UUID.fromString(id));
         if (oldCourse == null) {
             Util.json(response, "{\"ok\":false}");
             return;
         }
-        Database.getInstance().setCourse(new Course(oldCourse.id(), name, oldCourse.status(), oldCourse.comment()));
+        Database.getInstance().setCourse(new Course(oldCourse.id(), name, oldCourse.status(), oldCourse.comment(), oldCourse.creationTime()));
         Util.json(response, "{\"ok\":true}");
     }
 

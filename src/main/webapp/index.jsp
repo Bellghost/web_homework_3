@@ -2,11 +2,11 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>JSP - Hello World</title>
+    <title>作业3</title>
 </head>
 <body>
-<h1><%= "Hello World!" %>
-</h1>
-<br/>
+    <a href="course.jsp">课程选择</a>
+    <br />
+    <a href="approve.jsp">申请审批</a>
 </body>
 </html>
