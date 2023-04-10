@@ -2,13 +2,8 @@
 <%@ page import="com.github.permissiondog.webhomework3.Course" %>
 <%@ page import="java.util.Comparator" %>
 <%@ page import="java.util.List" %>
-<%@ page import="com.github.permissiondog.webhomework3.CourseName" %><%--
-  Created by IntelliJ IDEA.
-  User: PermissionDog
-  Date: 2023/4/10 0010
-  Time: 15:30
-  To change this template use File | Settings | File Templates.
---%>
+<%@ page import="com.github.permissiondog.webhomework3.CourseName" %>
+<%@ page import="java.time.format.DateTimeFormatter" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
@@ -33,7 +28,7 @@
         }
         #course-list {
             flex: 1;
-            width: 500px;
+            width: 100%;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -47,7 +42,7 @@
         const apply = async () => {
             const course = document.querySelector('#course-selected').value
             const data = new FormData()
-            data.set("name", course)
+            data.set('name', course)
             const res = await fetch('api/course', {
                 method: 'post',
                 body: new URLSearchParams(data),
@@ -62,8 +57,8 @@
         }
         const editCourse = async (id, newName) => {
             const data = new FormData()
-            data.set("id", id)
-            data.set("name", newName)
+            data.set('id', id)
+            data.set('name', newName)
 
             const res = await fetch('api/course?' + new URLSearchParams(data), {
                 method: 'put',
@@ -81,7 +76,7 @@
 
         const deleteCourse = async (id) => {
             const data = new FormData()
-            data.set("id", id)
+            data.set('id', id)
 
             const res = await fetch('api/course?' + new URLSearchParams(data), {
                 method: 'delete',
@@ -118,6 +113,8 @@
         <tr>
             <td>课程名称</td>
             <td>状态</td>
+            <td>备注</td>
+            <td>创建时间</td>
             <td>操作</td>
         </tr>
         <%
@@ -129,6 +126,8 @@
             <tr class="course-row">
                 <td><input value="<%=course.name()%>" onblur="editCourse('<%=course.id()%>', this.value)"></td>
                 <td><div><%=course.status().getDisplayName() %></div></td>
+                <td><div><%=course.comment()%></div></td>
+                <td><div><%=course.creationTime().format(DateTimeFormatter.ofPattern("yyyy-M-d HH:mm:ss"))%></div></td>
                 <td><input type="button" value="删除" onclick="deleteCourse('<%=course.id()%>')"> </td>
             </tr>
         <%
